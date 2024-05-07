@@ -16,7 +16,7 @@ import java.util.List;
 public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> createUser(
-            @Valid @ModelAttribute UserDTO userDTO,
+            @Valid @RequestBody UserDTO userDTO,
             BindingResult result
             ){
         try {
