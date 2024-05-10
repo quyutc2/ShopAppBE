@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
     // Tìm đơn hàng của user nào đó
-    List<Order> findByUerId(Long userId);
+    List<Order> findByUserId(Long userId);
 
 }
