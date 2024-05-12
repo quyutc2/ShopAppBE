@@ -1,7 +1,13 @@
 package com.project.shopapp.controllers;
 
 import com.project.shopapp.dtos.ProductDTO;
+import com.project.shopapp.dtos.ProductImageDTO;
+import com.project.shopapp.models.Product;
+import com.project.shopapp.models.ProductImage;
+import com.project.shopapp.services.IProductService;
+import com.project.shopapp.services.ProductService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,14 +27,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("${api.prefix}/products")
 public class ProductController {
+    private final IProductService productService;
     // post
-    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping("")
     public ResponseEntity<?> createProduct(
-            @Valid @ModelAttribute ProductDTO productDTO,
-          //  @RequestPart("file") MultipartFile file,
+            @Valid @RequestBody ProductDTO productDTO,
+           // @ModelAttribute("files") List<MultipartFile> files,
             BindingResult result){
         try {
             if (result.hasErrors()){
@@ -38,8 +46,21 @@ public class ProductController {
                         .toList();
                 return ResponseEntity.badRequest().body(errorMessages);
             }
-            List<MultipartFile> files = productDTO.getFiles();
+            Product newProduct = productService.createProduct(productDTO);
+            return ResponseEntity.ok(newProduct);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @PostMapping(value = "uploads/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadImages(
+            @PathVariable("id") Long productId,
+            @ModelAttribute("files") List<MultipartFile> files
+    ){
+        try {
+            Product existingProduct = productService.getProductById(productId);
             files = files == null ? new ArrayList<MultipartFile>() : files;
+            List<ProductImage> productImages = new ArrayList<>();
             for(MultipartFile file: files){
                 if(file.getSize() == 0){
                     continue;
@@ -56,14 +77,21 @@ public class ProductController {
                 }
                 // Lưu file và cập nhập thumnail trong DTO
                 String fileName = storeFile(file);
-                // lưu vào dối tợng product tronG DB => làm sau
+                // lưu vào dối tợng product trong DB
+                ProductImage productImage = productService.createProductImage( // lưu vào bảng product_images
+                        existingProduct.getId(),
+                        ProductImageDTO.builder()
+                                .imageUrl(fileName)
+                                .build());
+                productImages.add(productImage);
             }
-
-            return ResponseEntity.ok("product created successfuly");
+            return ResponseEntity.ok().body(productImages);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+
     private String storeFile(MultipartFile file) throws IOException {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         // Thêm UUID vafo trước tên file để tên file là duy nhất

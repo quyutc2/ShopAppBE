@@ -5,6 +5,7 @@ import com.project.shopapp.models.Category;
 
 import java.util.List;
 
+
 public interface ICategoryService {
     Category createCategory(CategoryDTO categoryDTO);
     Category getCategoryById(Long id);
