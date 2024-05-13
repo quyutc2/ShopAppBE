@@ -11,7 +11,7 @@ import lombok.*;
 @Getter
 @Setter
 public class ProductImage {
-
+    public static final int MAXIMUM_IMAGES_PRE_PRODUCT = 5;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
