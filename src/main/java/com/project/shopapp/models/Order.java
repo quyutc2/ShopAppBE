@@ -3,6 +3,7 @@ package com.project.shopapp.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -20,7 +21,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private User userId;
 
     @Column(name = "fullname", length = 100)
     private String fullName;
@@ -32,13 +33,13 @@ public class Order {
     private String phoneNumber;
 
     @Column(name = "address", length = 200)
-    private String adress;
+    private String address;
 
     @Column(name = "note", length = 100)
     private String note;
 
     @Column(name = "order_date")
-    private LocalDateTime orderDate;
+    private Date orderDate;
 
     @Column(name = "status")
     private String status;
@@ -49,8 +50,8 @@ public class Order {
     @Column(name = "shipping_method")
     private String shippingMethod;
 
-    @Column(name = "shiping_date")
-    private Date shipingDate;
+    @Column(name = "shipping_date")
+    private LocalDate shippingDate;
 
     @Column(name = "tracking_number")
     private String trackingNumber;
