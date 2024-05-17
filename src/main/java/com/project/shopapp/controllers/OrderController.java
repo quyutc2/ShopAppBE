@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+
 @RequestMapping("${api.prefix}/orders")
 public class OrderController {
     private final IOrderService orderService;
@@ -49,7 +50,7 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/{id}") // thêm đường dẫn user_id
+    @GetMapping("/{id}")
     //http://localhost:8088/api/v1/order/{id}
     public ResponseEntity<?> getOrder(@Valid @PathVariable("id") Long orderId){
         try {

@@ -109,7 +109,7 @@ public class ProductController {
         // Thêm UUID vafo trước tên file để tên file là duy nhất
         String uniqueFilename = UUID.randomUUID().toString() + "_" + filename;
         // Đường dẫn đến thư mục lưu file
-        java.nio.file.Path upLoadDir = Paths.get("uplpads");
+        java.nio.file.Path upLoadDir = Paths.get("uploads");
         // Kiểm tra và ta thư mục nêu nó k tồn tại
         if (!Files.exists(upLoadDir)){
             Files.createDirectories(upLoadDir);

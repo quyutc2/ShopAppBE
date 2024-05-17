@@ -1,5 +1,6 @@
 package com.project.shopapp.models;
 
+import com.project.shopapp.responses.OrderDetailResponse;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,11 +29,12 @@ public class OrderDetail {
     private Float price;
 
     @Column(name = "number_of_products",nullable = false)
-    private String numberOfProducts;
+    private int numberOfProducts;
 
     @Column(name = "total_money", nullable = false)
     private Float totalMoney;
 
     @Column(name = "color")
     private String color;
+
 }
