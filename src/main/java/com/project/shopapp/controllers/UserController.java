@@ -43,7 +43,7 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody UserLoginDTO userLoginDTO){
+    public ResponseEntity<String> login(@Valid @RequestBody UserLoginDTO userLoginDTO) throws Exception {
         // Kiểm tra tt đăng nhập và sinh token
         String token = userService.login(userLoginDTO.getPhoneNumber(),userLoginDTO.getPassword());
         // Trả về token trong respone
