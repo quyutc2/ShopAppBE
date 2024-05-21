@@ -8,6 +8,7 @@ import com.project.shopapp.models.User;
 import com.project.shopapp.repositories.RoleRepository;
 import com.project.shopapp.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -20,14 +21,18 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserService implements IUserService{
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
+
+    private final UserRepository userRepository;
+
+    private final RoleRepository roleRepository;
 
     private final PasswordEncoder passwordEncoder;
+
     private final JwtTokenUtil jwtTokenUtil;
+
     private final AuthenticationManager authenticationManager;
     @Override
-    public User createUser(UserDTO userDTO) throws DataNotFoundException {
+    public User createUser(UserDTO userDTO) throws Exception {
         //register
         String phoneNumber = userDTO.getPhoneNumber();
         // ktar xem sdt co ton tai k
@@ -61,19 +66,20 @@ public class UserService implements IUserService{
         // security
         Optional<User> optionalUser = userRepository.findByPhoneNumber(phoneNumber);
         if (optionalUser.isEmpty()){
-            throw new DataNotFoundException("Invalid phonenumber/ password");
+            throw new DataNotFoundException("Invalid phone number/ password");
         }
         // return optionalUser.get();
         //  muốn trả về token JWT
         User existingUser = optionalUser.get();
         //check password
-        if (existingUser.getFacebookAccountId()==0||existingUser.getGoogleAccountId()==0) {
+        if (existingUser.getFacebookAccountId()==0 && existingUser.getGoogleAccountId()==0) {
             if (!passwordEncoder.matches(password, existingUser.getPassword())){
-                throw new BadCredentialsException("Wrong phoen number of password");
+                throw new BadCredentialsException("Wrong phone number of password");
             }
         }
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-           phoneNumber, password
+                phoneNumber, password,
+                existingUser.getAuthorities()
         );
         //authenticate with Java Spring Security
         authenticationManager.authenticate(authenticationToken);
