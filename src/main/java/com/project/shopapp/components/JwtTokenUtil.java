@@ -55,7 +55,7 @@ public class JwtTokenUtil {
         SecureRandom random = new SecureRandom();
         byte[] keyBytes = new byte[32];
         random.nextBytes(keyBytes);
-        String secretKey = Encoders.BASE64.encode(keyBytes);
+        secretKey = Encoders.BASE64.encode(keyBytes);
         return secretKey;
 //        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 //        return Encoders.BASE64.encode(key.getEncoded());
