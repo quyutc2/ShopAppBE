@@ -6,14 +6,12 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.io.Encoder;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.security.InvalidParameterException;
 import java.security.Key;
 import java.security.SecureRandom;
 import java.util.Date;
@@ -28,7 +26,7 @@ public class JwtTokenUtil {
     private long expiration; //save to an environment variable
     @Value("${jwt.secretKey}")
     private String secretKey;
-    public String generateToken(com.project.shopapp.models.User user) throws Exception{
+    public String generateToken(User user) throws Exception{
         //properties => claims
         Map<String, Object> claims = new HashMap<>();
         this.generateSecretKey();
@@ -59,6 +57,8 @@ public class JwtTokenUtil {
         random.nextBytes(keyBytes);
         String secretKey = Encoders.BASE64.encode(keyBytes);
         return secretKey;
+//        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+//        return Encoders.BASE64.encode(key.getEncoded());
     }
 
     private Claims extractAllClaims(String token){
