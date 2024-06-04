@@ -21,7 +21,7 @@ import java.util.List;
 public class UserController {
     private final IUserService userService;
     @PostMapping("/register")
-    public ResponseEntity<?> createUser(
+    public ResponseEntity<?> createUser (
             @Valid @RequestBody UserDTO userDTO,
             BindingResult result
             ){
